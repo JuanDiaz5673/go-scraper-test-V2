@@ -2,28 +2,42 @@ package scraper
 
 import (
 	"fmt"
+	Db "github.com/Juandiaz5673/go-scraper-test-v2/database_wrk"
 	"github.com/gocolly/colly"
 	"strings"
 )
 
-func Scraper() {
+func Scraper() []string {
 	Verses := make([]string, 32)
-	testament := make([]string, 10)
-	bible := "New King James Version"
 
-	var Url string = "https://www.biblegateway.com/passage/?search=Genesis%201&version=KJV"
+	var Url = "https://www.biblegateway.com/passage/?search=Genesis%201&version=KJV"
 	c := colly.NewCollector()
 
+	Dbc, err := Db.DbConnection()
+	if err != nil {
+		panic(err.Error())
+	}
 	for i := 1; i <= 32; i++ {
 		c := colly.NewCollector()
-		css_verse := fmt.Sprintf("#en-KJV-%d.text.Gen-1-%d", i, i)
+		cssVerse := fmt.Sprintf("#en-KJV-%d.text.Gen-1-%d", i, i)
 
-		c.OnHTML(css_verse, func(h *colly.HTMLElement) {
-			verse_text := h.Text
+		c.OnHTML(cssVerse, func(h *colly.HTMLElement) {
+			verseText := h.Text
 			trim := fmt.Sprintf("%d", i)
-			verse_text1 := strings.TrimLeft(verse_text, trim)
-			verse_text2 := strings.TrimSpace(verse_text1)
-			Verses[i-1] = verse_text2
+			verseText1 := strings.TrimLeft(verseText, trim)
+			verseText2 := strings.TrimSpace(verseText1)
+			Verses[i-1] = verseText2
+
+			Bible := "New King James Version"
+			Testament := 0
+
+			y := fmt.Sprintf("INSERT INTO newkingjamesversion (ID, BookNumber, BookName, ChapterName, ChapterNumber, VerseNumber, VerseText, Testament, BookPreference) VALUES('%d', '1', 'Genesis', 'The History of Creation', '1', '%d', '%s', '%d', '%s')", i, i, Verses[i-1], Testament, Bible)
+			insert, err := Dbc.Query(y)
+
+			if err != nil {
+				panic(err.Error())
+			}
+			insert.Close()
 		})
 
 		c.Visit(Url)
@@ -31,11 +45,5 @@ func Scraper() {
 
 	c.Visit(Url)
 
-	var verseNum int
-	fmt.Println("What verse would you like to see? ")
-	fmt.Scanln(&verseNum)
-	fmt.Printf("The following is verse %d from %s "+testament[0]+":\n", verseNum, bible)
-	fmt.Println(Verses[verseNum-1])
-	fmt.Println(testament[0])
-	fmt.Print("\n")
+	return nil
 }

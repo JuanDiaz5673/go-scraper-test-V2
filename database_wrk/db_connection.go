@@ -5,10 +5,10 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func Db_connection() {
+func DbConnection() (*sql.DB, error) {
 	Db, err := sql.Open("mysql", "admin:nacional11@tcp(demobibledb.chctxthfleif.us-east-2.rds.amazonaws.com:3306)/demobibledb")
 	if err != nil {
-		panic(err.Error())
+		return nil, err
 	}
-	defer Db.Close()
+	return Db, nil
 }

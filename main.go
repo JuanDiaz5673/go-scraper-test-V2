@@ -9,13 +9,8 @@ import (
 func main() {
 
 	// Connect to database
-	Db.Db_connection()
-
+	Db.DbConnection()
 
 	// Scraper getting the verse text
 	Sc.Scraper()
-
-
-	// Editing the database
-	Db.Db_edit()
 }
