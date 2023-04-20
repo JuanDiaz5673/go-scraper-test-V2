@@ -17,6 +17,11 @@ func Scraper() []string {
 	if err != nil {
 		panic(err.Error())
 	}
+
+	// Step 1 Url | Line 13
+	// Step 2 Update the rows | Line 25
+	// Step 3 Update CSS Identifier | 27
+
 	for i := 1; i <= 32; i++ {
 		c := colly.NewCollector()
 		cssVerse := fmt.Sprintf("#en-KJV-%d.text.Gen-1-%d", i, i)
