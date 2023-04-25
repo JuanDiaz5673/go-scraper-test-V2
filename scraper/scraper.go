@@ -8,26 +8,23 @@ import (
 )
 
 func Scraper() []string {
-	Verses := make([]string, 32)
+	// Needs to be updated to total number of verses
+	Verses := make([]string, 1000)
 
-	var Url = "https://www.biblegateway.com/passage/?search=Genesis%201&version=KJV"
+	var Url = "https://www.biblegateway.com/passage/?search=Genesis%202&version=NKJV"
 	c := colly.NewCollector()
 
 	Dbc, err := Db.DbConnection()
 	if err != nil {
 		panic(err.Error())
 	}
-
-	// Step 1 Url | Line 13
-	// Step 2 Update the rows | Line 25
-	// Step 3 Update CSS Identifier | 27
-
-	for i := 1; i <= 32; i++ {
+	for i := 33; i <= 58; i++ {
 		c := colly.NewCollector()
-		cssVerse := fmt.Sprintf("#en-KJV-%d.text.Gen-1-%d", i, i)
+		cssVerse := fmt.Sprintf("#en-NKJV-%d.text.Gen-2-2", i)
 
 		c.OnHTML(cssVerse, func(h *colly.HTMLElement) {
 			verseText := h.Text
+			fmt.Println(verseText)
 			trim := fmt.Sprintf("%d", i)
 			verseText1 := strings.TrimLeft(verseText, trim)
 			verseText2 := strings.TrimSpace(verseText1)
@@ -36,7 +33,7 @@ func Scraper() []string {
 			Bible := "New King James Version"
 			Testament := 0
 
-			y := fmt.Sprintf("INSERT INTO newkingjamesversion (ID, BookNumber, BookName, ChapterName, ChapterNumber, VerseNumber, VerseText, Testament, BookPreference) VALUES('%d', '1', 'Genesis', 'The History of Creation', '1', '%d', '%s', '%d', '%s')", i, i, Verses[i-1], Testament, Bible)
+			y := fmt.Sprintf("INSERT INTO newkingjamesversion (ID, BibleNumber, BiblePreference, Testament, BookNumber, BookName, VerseText, Testament, BookPreference) VALUES('%d', '2', 'Genesis2', 'Book2chaptermustupdate', '1', '%d', '%s', '%d', '%s')", i, i, Verses[i-1], Testament, Bible)
 			insert, err := Dbc.Query(y)
 
 			if err != nil {
