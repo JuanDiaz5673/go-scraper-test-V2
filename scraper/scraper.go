@@ -18,7 +18,7 @@ func Scraper() []string {
 	if err != nil {
 		panic(err.Error())
 	}
-	for i := 33; i <= 58; i++ {
+	for i := 32; i <= 57; i++ {
 		c := colly.NewCollector()
 		cssVerse := fmt.Sprintf("#en-NKJV-%d.text.Gen-2-2", i)
 
@@ -33,7 +33,7 @@ func Scraper() []string {
 			Bible := "New King James Version"
 			Testament := 0
 
-			y := fmt.Sprintf("INSERT INTO newkingjamesversion (ID, BibleNumber, BiblePreference, Testament, BookNumber, BookName, VerseText, Testament, BookPreference) VALUES('%d', '2', 'Genesis2', 'Book2chaptermustupdate', '1', '%d', '%s', '%d', '%s')", i, i, Verses[i-1], Testament, Bible)
+			y := fmt.Sprintf("INSERT INTO newkingjamesversion (ID, BookNumber, BiblePreference, Testament, BookNumber, BookName, ChapterNumber, ChapterName, VerseNumber, VerseText) VALUES('%d', '2', 'Genesis2', 'Book2chaptermustupdate', '1', '%d', '%s', '%d', '%s')", i, i, Verses[i-1], Testament, Bible)
 			insert, err := Dbc.Query(y)
 
 			if err != nil {
